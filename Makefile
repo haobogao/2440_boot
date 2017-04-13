@@ -11,11 +11,12 @@ edit :$(objs)
 	$(LD) -N -Tlinkscp1 $(objs) -o boot_elf
 	$(OBJCP) -O binary -S boot_elf boot.bin
 	$(OBJDUMP) -S -D -m arm boot_elf>DEBUG_INFO
+	mv ./*.o ./bin 
 %.o:%.c
 	$(CC) $(CFLAGS) $< 
 start.o:start.s
 	$(CC) $(CFLAGS) $< 
 clean:
-	rm -f *o
+	rm -f ./bin/*.o ./*.bin
 
 
