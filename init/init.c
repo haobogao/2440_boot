@@ -4,6 +4,7 @@
  *  Created on: Apr 12, 2017
  *      Author: haobogao
  */
+#include <s3c2440.h>
 void mmu_init(void)
 {
 	/*

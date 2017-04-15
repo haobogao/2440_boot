@@ -1,37 +1,52 @@
 .equ MEM_CON_REG_ADDR,0x48000000
-.equ SDRAM_BASE_ADDR,0x30004000
+.equ SDRAM_BASE_ADDR,0x30000000
 .equ WTCON_BASE_ADDR,0x53000000
 .text
 .global _start
 _start:
     	b reset
     	ldr	pc, _undefined_instruction	
-	ldr	pc, _software_interrupt		
+		ldr	pc, _software_interrupt
 	ldr	pc, _prefetch_abort			
 	ldr	pc, _data_abort				
 	ldr	pc, _not_used				
-	ldr	pc, _irq					
+	b _irq
 	ldr	pc, _fiq
 _undefined_instruction: .word undefined_instruction
 _software_interrupt:	.word software_interrupt
 _prefetch_abort:	.word prefetch_abort
 _data_abort:		.word data_abort
 _not_used:		.word not_used
-_irq:			.word irq
+_irq:
+	 sub lr, lr, #4                  @ 计算返回地址
+   	 stmdb   sp!,    { r0-r12,lr }   @ 保存使用到的寄存器
+                                    @ 注意，此时的sp是中断模式的sp
+                                    @ 初始值是上面设置的3072
+
+    ldr lr, =int_return             @ 设置调用ISR即EINT_Handle函数后的返回地址
+    ldr pc, =IRQ_Handle            @ 调用中断服务函数，在interrupt.c中
+int_return:
+    ldmia   sp!,    { r0-r12,pc }^  @ 中断返回, ^表示将spsr的值复制到cpsr
 _fiq:			.word fiq
 reset:
 
     bl disable_watch_dog /*close the watchdog*/
 
+    msr cpsr_c, #0xd2       @ 进入中断模式
+    ldr sp, =3072           @ 设置中断模式栈指针
+
+    msr cpsr_c, #0xd3       @ 进入管理模式
+    ldr sp,=4096
+
     bl mem_controller_setup
 
     bl copy_4096_to_sdram
 
-    ldr sp,=4096
+	bl init_irq
 
-    bl page_table_create
+	msr cpsr_c, #0x5f       @ 设置I-bit=0，开IRQ中断
 
-    ldr sp,=0xb4000000
+    ldr sp,=0x34000000
 
     ldr pc,=entry
 loop:
@@ -39,7 +54,7 @@ loop:
 
 copy_4096_to_sdram:
     /* copy code from steppingstone to the sdram  */
-    mov r1,#2048
+    mov r1,#0
     ldr r2,=SDRAM_BASE_ADDR
     mov r3,#4096
  b:

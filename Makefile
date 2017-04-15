@@ -4,11 +4,11 @@ AS = $(prefix)-as
 LD = $(prefix)-ld
 OBJCP = $(prefix)-objcopy
 OBJDUMP=$(prefix)-objdump
-objs:= led.o init.o start.o
-VPATH=./include:./LED/:./init
+objs:= led.o init.o start.o IRQ.o main.o uart.o clock.o CMD.o
+VPATH=./include:./LED/:./init:./uart
 CFLAGS= -I./include -c -Os
 edit :$(objs)
-	$(LD) -N -Tlinkscp1 $(objs) -o boot_elf
+	$(LD) -N -Tlinkscp $(objs) -o boot_elf
 	$(OBJCP) -O binary -S boot_elf boot.bin
 	$(OBJDUMP) -S -D -m arm boot_elf>DEBUG_INFO
 	mv ./*.o ./bin 
