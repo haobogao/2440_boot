@@ -4,9 +4,10 @@
  *  Created on: 2016��9��30��
  *      Author: haobo
  */
-#include "CMD.h"
+#include <CMD.h>
 #include "LED.h"
 #include "uart.h"
+#include <nand1.h>
 extern led_num_t    led1
 				,led2
 				,led3;
@@ -18,10 +19,6 @@ extern led_num_t    led1
 	unsigned char cmd_analyze(char * cmd)
 	{
 		if(str_cmp("led on 1\r\n",cmd) == EQ || str_cmp("lo 1\r\n",cmd) == EQ){
-	#ifdef DEBUG_PRINT
-				print("find command led on 1\r\n");
-	#endif
-
 			return CMD_LED1_ON;
 		}
 		if(str_cmp("led on\r\n",cmd) == EQ || str_cmp("lo\r\n",cmd) == EQ){
@@ -41,6 +38,9 @@ extern led_num_t    led1
 		}
 		if(str_cmp("led status turn 3\r\n",cmd) == EQ || str_cmp("lst 3\r\n",cmd) == EQ){
 			return CMD_LED3_STATUS_TURN;
+		}
+		if(str_cmp("nand test\r\n",cmd) == EQ || str_cmp("nt\r\n",cmd) == EQ){
+				return CMD_NAND_TEST;
 		}
 
 			print("wrong command!\r\n");
@@ -65,42 +65,46 @@ void cmd_excute(void)
 		  case CMD_LED1_ON:{
 			  led_con(led1,ON);
 			  print("Your command has been performed!\r\n");
-			  break;
-		  }
+
+		  }break;
 		  case CMD_LED2_ON:{
 			  led_con(led2,ON);
 			  print("Your command has been performed!\r\n");
-			  break;
-		  }
+
+		  }break;
 		  case CMD_LED3_ON:{
 			  led_con(led3,ON);
 			  print("Your command has been performed!\r\n");
-			  break;
-		  }
+
+		  } break;
 		  case CMD_LED1_STATUS_TURN:{
 			  LED_ST_TURN(led1);
 			  print("Your command has been performed!\r\n");
-			  break;
-		  }
+
+		  }break;
 		  case CMD_LED2_STATUS_TURN:{
 			  LED_ST_TURN(led2);
 			  print("Your command has been performed!\r\n");
-			  break;
-		  }
+
+		  }break;
 		  case CMD_LED3_STATUS_TURN:{
 			  LED_ST_TURN(led3);
 			  	  print("Your command has been performed!\r\n");
-			  	  break;
-		   }
+
+		   } break;
 		  case CMD_LED_ON:{
 			  	  led_con(led1,ON);
 			  	 led_con(led2,ON);
 			  	 led_con(led3,ON);
 			  	  print("Your command has been performed!\r\n");
-			  	  break;
-		   }
+
+		   } break;
+		  case CMD_NAND_TEST:{
+		 			  	 nand_test();
+		 			  	  print("Your command has been performed!\r\n");
+
+		 		   } break;
 
 		}
 	}
 }
-

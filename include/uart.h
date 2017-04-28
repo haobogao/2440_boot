@@ -2,7 +2,7 @@
 	> File Name: uart.h
 	> Author: haobo
 	> Mail: haobo.gao@qq.com
-	> Created Time: 2016骞�09鏈�25鏃� 鏄熸湡鏃� 04鏃�13鍒�35绉�
+	> Created Time: 2016楠烇拷09閺堬拷25閺冿拷 閺勭喐婀￠弮锟� 04閺冿拷13閸掞拷35缁夛拷
  ************************************************************************/
 
 #ifndef _UART_H
@@ -69,7 +69,7 @@ unsigned char uart_recive_byte(void);
 
 char* scan(void);
 
-
+void put_a_char(char ch);
 
 void print(char * str);
 

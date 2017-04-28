@@ -16,6 +16,7 @@
 #define CMD_LED3_ON 			5
 #define CMD_LED3_STATUS_TURN 	6
 #define CMD_LED_ON 				7
+#define CMD_NAND_TEST 			8
 
 /* some useful define  */
 #define EQ 		1

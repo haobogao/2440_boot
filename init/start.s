@@ -18,33 +18,33 @@ _prefetch_abort:	.word prefetch_abort
 _data_abort:		.word data_abort
 _not_used:		.word not_used
 _irq:
-	 sub lr, lr, #4                  @ 计算返回地址
-   	 stmdb   sp!,    { r0-r12,lr }   @ 保存使用到的寄存器
-                                    @ 注意，此时的sp是中断模式的sp
-                                    @ 初始值是上面设置的3072
+	 sub lr, lr, #4                  @ 璁＄畻杩斿洖鍦板潃
+   	 stmdb   sp!,    { r0-r12,lr }   @ 淇濆瓨浣跨敤鍒扮殑瀵勫瓨鍣�
+                                    @ 娉ㄦ剰锛屾鏃剁殑sp鏄腑鏂ā寮忕殑sp
+                                    @ 鍒濆鍊兼槸涓婇潰璁剧疆鐨�3072
 
-    ldr lr, =int_return             @ 设置调用ISR即EINT_Handle函数后的返回地址
-    ldr pc, =IRQ_Handle            @ 调用中断服务函数，在interrupt.c中
+    ldr lr, =int_return             @ 璁剧疆璋冪敤ISR鍗矱INT_Handle鍑芥暟鍚庣殑杩斿洖鍦板潃
+    @ldr pc, =IRQ_Handle            @ 璋冪敤涓柇鏈嶅姟鍑芥暟锛屽湪interrupt.c涓�
 int_return:
-    ldmia   sp!,    { r0-r12,pc }^  @ 中断返回, ^表示将spsr的值复制到cpsr
+    ldmia   sp!,    { r0-r12,pc }^  @ 涓柇杩斿洖, ^琛ㄧず灏唖psr鐨勫�煎鍒跺埌cpsr
 _fiq:			.word fiq
 reset:
 
     bl disable_watch_dog /*close the watchdog*/
 
-    msr cpsr_c, #0xd2       @ 进入中断模式
-    ldr sp, =3072           @ 设置中断模式栈指针
+    @msr cpsr_c, #0xd2       @ 杩涘叆涓柇妯″紡
+   @ ldr sp, =3072           @ 璁剧疆涓柇妯″紡鏍堟寚閽�
 
-    msr cpsr_c, #0xd3       @ 进入管理模式
-    ldr sp,=4096
+  @  msr cpsr_c, #0xd3       @ 杩涘叆绠＄悊妯″紡
+    ldr sp,=0x200000
 
     bl mem_controller_setup
 
     bl copy_4096_to_sdram
 
-	bl init_irq
+	@bl init_irq
 
-	msr cpsr_c, #0x5f       @ 设置I-bit=0，开IRQ中断
+	@msr cpsr_c, #0x5f       @ 璁剧疆I-bit=0锛屽紑IRQ涓柇
 
     ldr sp,=0x34000000
 
@@ -56,7 +56,7 @@ copy_4096_to_sdram:
     /* copy code from steppingstone to the sdram  */
     mov r1,#0
     ldr r2,=SDRAM_BASE_ADDR
-    mov r3,#4096
+    mov r3,#(4096*10)
  b:
      ldr r4,[r1],#4
      str r4,[r2],#4

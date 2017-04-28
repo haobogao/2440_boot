@@ -18,7 +18,7 @@ void uart_init(void)
 	* 	we set it works
 	*/
 	GPHCON = 0xa0;
-	GPHUP   = 0x0c;     // GPH2,GPH3内部上拉
+	GPHUP   = 0x0c;     // GPH2,GPH3鍐呴儴涓婃媺
 
 	//open the uart0's clock
 	use_perpheral(UART0);
@@ -27,13 +27,13 @@ void uart_init(void)
    */
 	ULCON0 = 0x03 | ULCON0;
 	/*UART CONTROL REGISTER
-	 *UBRDIVn= (int)( UART clock / ( buad rate x 16) ) –1
+	 *UBRDIVn= (int)( UART clock / ( buad rate x 16) ) 鈥�1
 	 *
 	 */
 	UCON0 = 0x05;
 	UBRDIV0 = UBRDIV_VAL(115200);  //set buad_rate = 115200
-    UFCON0  = 0x00;     // 不使用FIFO
-    UMCON0  = 0x00;     // 不使用流控
+    UFCON0  = 0x00;     // 涓嶄娇鐢‵IFO
+    UMCON0  = 0x00;     // 涓嶄娇鐢ㄦ祦鎺�
 
 }
 
@@ -58,7 +58,10 @@ void print(char * str)
 	uart_send_byte(*str++);
 	uart_send_byte('\n');
 }
-
+void put_a_char(char ch)
+{
+	uart_send_byte(ch);
+}
 
 char* scan(void)
 {
