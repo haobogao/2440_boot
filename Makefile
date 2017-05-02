@@ -4,18 +4,26 @@ AS = $(prefix)-as
 LD = $(prefix)-ld
 OBJCP = $(prefix)-objcopy
 OBJDUMP=$(prefix)-objdump
+SUBDIR = $(shell ls -l | grep ^d | awk '{if( $$9 != "debug" && $$9 != "include") print $$9}' )
+DEBUGDIR= $(shell ls -l | grep ^d | awk '{if( $$9 == "debug") print $$9}' )
+ROOTDIR = $(shell pwd)
+BINFILE= boot.bin
+OBJDIR = debug/obj
+BINDIR = debug/bin
 GCCLIBPATH = -lgcc  -L/usr/lib/gcc-cross/arm-linux-gnueabi/6/
-objs:= led.o init.o start.o  main.o uart.o clock.o CMD.o nand1.o printf.o vsprintf.o string.o div64.o ctype.o#IRQ.o
-VPATH=./include:./LED/:./init:./uart:./nand
-CFLAGS= -I./include -c  -Os -nostdlib -fno-builtin -Os 
-edit :$(objs)
-	$(LD) -N -Tlinkscp $(objs) -o boot_elf $(GCCLIBPATH)
-	$(OBJCP) -O binary -S boot_elf boot.bin
-	$(OBJDUMP) -S -D -m arm boot_elf>DEBUG_INFO
-	mv ./*.o ./bin
-%.o:%.c
-	$(CC) $(CFLAGS) $<
-start.o:start.s
-	$(CC) $(CFLAGS) $<
+CURSRC = ${wildcard *.c}
+CUROBJ = $(patsubst %c,%o,$(CURSRC))
+CFLAGS= -I$(ROOTDIR)/include -c  -Os -nostdlib -fno-builtin
+export CC BINFILE ROOTDIR OBJDIR BINDIR CFLAGS GCCLIBPATH LD OBJCP OBJDUMP prefix AS
+all:$(SUBDIR) $(CUROBJ) $(DEBUGDIR)
+$(SUBDIR):ECHO
+	make -C $@
+$(CUROBJ): %.o:%.c
+	$(CC) $(CFLAGS) $^ -o $(ROOTDIR)/$(OBJDIR)/$@
+$(DEBUGDIR):ECHO
+	make -C $@
+ECHO:
+	@echo $(SUBDIR)
+
 clean:
-	rm -f ./bin/*.o ./*.bin ./*o
+	rm -f $(OBJDIR)/*.o $(BINDIR)/*.bin
