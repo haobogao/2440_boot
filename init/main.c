@@ -11,6 +11,7 @@
 #include <uart.h>
 #include <CMD.h>
 #include <nand1.h>
+#include <lcd.h>
 void main(void );
 
 void entry(void)
@@ -20,6 +21,9 @@ void entry(void)
     clock_init();
 
 	uart_init();
+
+	lcd_init();
+	print("LCD\r\n");
 	//print("This is the s3c2440 UART0 test\r\n pass '1' to open led1\r\n");
 	while(1)
 		main();

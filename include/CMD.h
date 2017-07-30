@@ -23,6 +23,8 @@
 #define NO_EQ 	0
 
 
+
+
 unsigned char cmd_analyze(char * cmd);
 void cmd_excute(void);
 #endif /* INCLUDE_CMD_H_ */

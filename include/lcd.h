@@ -13,10 +13,10 @@
  *
  *
  * */
-#define LCD_ON 1
+
+#define LCD_FRAMEBUFF_ADDR  0x30400000
 
 
-
-
+void lcd_init(void);
 
 #endif /* INCLUDE_LCD_H_ */

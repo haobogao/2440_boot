@@ -1,4 +1,4 @@
-prefix= arm-linux-gnueabi
+prefix= arm-none-eabi
 CC = $(prefix)-gcc
 AS = $(prefix)-as
 LD = $(prefix)-ld
@@ -10,10 +10,10 @@ ROOTDIR = $(shell pwd)
 BINFILE= boot.bin
 OBJDIR = debug/obj
 BINDIR = debug/bin
-GCCLIBPATH = -lgcc  -L/usr/lib/gcc-cross/arm-linux-gnueabi/6/
+GCCLIBPATH = -lgcc  -L/usr/lib/gcc-cross/arm-linux-gnueabi/5/
 CURSRC = ${wildcard *.c}
 CUROBJ = $(patsubst %c,%o,$(CURSRC))
-CFLAGS= -I$(ROOTDIR)/include -c  -Os -nostdlib -fno-builtin
+CFLAGS= -I$(ROOTDIR)/include -c   -nostdlib -fno-builtin
 export CC BINFILE ROOTDIR OBJDIR BINDIR CFLAGS GCCLIBPATH LD OBJCP OBJDUMP prefix AS
 all:$(SUBDIR) $(CUROBJ) $(DEBUGDIR)
 $(SUBDIR):ECHO
