@@ -1,5 +1,5 @@
 
-/home/haobo/workspace/arm-single/debug/obj/boot_elf:     file format elf32-littlearm
+/home/haobo/workspace/arm-single/2440_boot/debug/obj/boot_elf:     file format elf32-littlearm
 
 
 Disassembly of section .text:
